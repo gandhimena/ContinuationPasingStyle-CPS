@@ -8,18 +8,48 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+protocol AsyncronosCountable {
+	func count(f: @escaping (Int)-> ())
+}
 
+
+class ViewController: UIViewController {
+	
+	let statusConnection = false
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do any additional setup after loading the view, typically from a nib.
+		
+		self.hasValue(
+			onTrue: {
+			print("true")
+		}) {
+			print("false")
+			//Do something with errores
+		}
 	}
 
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
+	func count(f: @escaping (Bool) -> Void ){
+		DispatchQueue.main.async {
+			f(self.statusConnection)
+		}
+	}
+	
+	func hasValue(onTrue: @escaping()-> (Void), onFalse: @escaping()-> (Void) ){
+		count { count in
+			
+			guard count == true else {
+				return onFalse()
+			}
+			
+			onTrue()
+		}
 	}
 
-
+	
 }
+
+//extension ViewController: AsyncronosCountable{
+//	
+//}
 
